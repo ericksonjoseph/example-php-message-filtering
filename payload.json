@@ -1,0 +1,17 @@
+{
+    "playContext": {
+    "locationUri": "/player/user/1/asset/1/video/1/stream/7c8eec14-5987-5ba4-453e-6ed1763dd4d6.json",
+        "playerState": null,
+        "userStream": {
+        "streamId": "7c8eec14-5987-5ba4-453e-6ed1763dd4d6",
+            "userId": "1",
+            "creationDate": 1487817151461,
+            "updateDate": 1487817151461,
+            "expirationDate": null,
+            "interval": 30,
+            "state": "CREATED",
+            "assetId": "1",
+            "videoId": "1"
+        }
+    }
+}
