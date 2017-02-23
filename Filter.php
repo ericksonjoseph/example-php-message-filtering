@@ -32,8 +32,23 @@ abstract class Filter
         return $r;
     }
 
+    /**
+     * Get a formatted binary representaion of $input
+     *
+     * @param $input - string to convert to binary form
+     */
     protected function getBinary(string $input): string
     {
         return str_pad(decbin($input), 8, 0, STR_PAD_LEFT);
+    }
+
+    /**
+     * $loops * $iterations will give you the number of total messages filtered
+     *
+     * @param $loops - number of times to run all unique jobs through the filter
+     * @param $iterations - number of unique jobs that get passed through the filter
+     */
+    public function getExpectedMatches(int $loops, int $iterations): int {
+        return $loops * $iterations * .5;
     }
 }

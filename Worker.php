@@ -98,7 +98,7 @@ class Worker {
 
     // Returns the expected number of matches that this worker should have detected
     private function getExpected() {
-        return $this->loops * $this->iterations * .5;
+        return $this->filter->getExpectedMatches($this->loops, $this->iterations);
     }
 
     // Returns the type of filter used

@@ -15,7 +15,10 @@ class BinaryFilter extends Filter {
     }
 
     protected function perform(string $data): bool {
+        return $this->work($data);
+    }
 
+    private function work(string $data): bool {
         $header = substr($data, 0, $this->byte_count);
         return ($this->mask & $header) !== 0;
     }

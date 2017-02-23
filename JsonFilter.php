@@ -5,7 +5,11 @@ include_once 'Filter.php';
 class JsonFilter extends Filter {
 
     private $stringMap = [
-        '0001','0003','0005','0007','0009'
+        '0001' => true,
+        '0003' => true,
+        '0005' => true,
+        '0007' => true,
+        '0009' => true
     ];
 
     public function getPrefix(int $i): string {
@@ -16,6 +20,6 @@ class JsonFilter extends Filter {
 
         $decoded = json_decode($data);
 
-        return in_array($decoded->id, $this->stringMap);
+        return isset($this->stringMap[$decoded->id]);
     }
 }
