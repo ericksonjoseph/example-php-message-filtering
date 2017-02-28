@@ -1,5 +1,11 @@
 <?php
 
+// Set default arg
+$arg = $argv[1] ?? 100000;
+
+// No less that 10 loops
+$loops = $arg > 9 ? $arg : 10;
+
 setlocale(LC_MONETARY, 'en_US');
 
 include 'Worker.php';
@@ -9,9 +15,10 @@ include 'StringFilter.php';
 
 // Will create a lot of output if set to true
 define('DEBUG', false);
+define('STAT_LOG', './stats.log');
 
 // How many messages to process (>= 10)
-define('LOOPS', 100000);
+define('LOOPS', $loops);
 
 // How many times to consecutively run each filter test
 define('COUNT', 10);
@@ -72,9 +79,8 @@ class App {
      * Return a string with the results of all workers run
      *
      * @access private
-     * @return string
      */
-    private function getResults() {
+    private function getResults(): string {
 
         $s = "------------------------------------------\n";
         $s .= "\t\tResults\n";

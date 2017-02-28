@@ -4,10 +4,11 @@ include_once 'Filter.php';
 
 class StringFilter extends Filter {
 
-    protected $byte_count;
+    protected $byte_count = 5;
 
-    protected $strategy = 'only_one_size_wildcard';
+    protected $strategy = 'onlyOneSizeWildcard';
 
+    /* All possible incoming messages */
     private $prefixes = [
         'sl.ul',
         'sl.um',
@@ -21,25 +22,14 @@ class StringFilter extends Filter {
         'cp.uc',
     ];
 
+    /* Messages we are interested in */
     private $stringMap = [
-        'sl.u' => true,
     ];
 
-    public function __construct() {
-
-        // Opportunity to do some optimization before running the test
-        switch ($this->strategy) {
-
-            // If we only have one wildcard we only have to read up to the wildcard's length
-            case "only_one_size_wildcard":
-                $keys = array_keys($this->stringMap);
-                $this->byte_count = strlen(array_pop($keys));
-                break;
-
-            default:
-                throw new \DomainException('cmon don\'t be a newb');
-        }
-    }
+    /* In order to support wildcards efficiently, we separate these into a different array */
+    private $wildcardMap = [
+        'cp' => true,
+    ];
 
     /**
      * Provide the prefixes that will be used to create messages
@@ -52,15 +42,18 @@ class StringFilter extends Filter {
      * Run the filtering logic!
      */
     protected function perform(string $data): bool {
-        return $this->only_one_size_wildcard($data); // NOTE: Making variable function will slow this filter down
+        return $this->mainStrategy($data); // NOTE: Making variable function will slow this filter down
     }
 
     /**
      * Strategy to use when we are filtering with a map that only has wild-cards of the same string length
      */
-    private function only_one_size_wildcard(string $data): bool {
+    private function mainStrategy(string $data): bool {
         $header = substr($data, 0, $this->byte_count);
-        return isset($this->stringMap[$header]);
+        if (isset($this->stringMap[$header]))
+            return true;
+        $x = explode('.', $header);
+        return isset($this->wildcardMap[reset($x)]);
     }
 
     /**
@@ -68,7 +61,7 @@ class StringFilter extends Filter {
      */
     public function getExpectedMatches(int $loops, int $iterations): int {
         $c = 0;
-        $strategy = $this->strategy;
+        $strategy = 'mainStrategy';
         foreach ($this->prefixes as $k)
             if ($this->$strategy($k))
                 $c++;

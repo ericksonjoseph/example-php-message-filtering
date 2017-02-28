@@ -1,8 +1,11 @@
 <?php
 
 include_once 'Filter.php';
+include_once 'BenchMarkerTrait.php';
 
 class Worker {
+
+    use BenchmarkerTrait;
 
     /**
      * filter
@@ -41,6 +44,8 @@ class Worker {
         $this->populateMessagesArray();
 
         // START
+        $this->stampMemory();
+        $this->stampTime();
         $this->start = microtime(true);
         for ($j=0;$j<$this->loops;$j++) {
             $this->iterateMessagesArray();
@@ -48,6 +53,8 @@ class Worker {
 
         // END
         $this->end = microtime(true);
+        $this->stampTime();
+        $this->stampMemory();
 
         return $this->getTimeTook();
     }
